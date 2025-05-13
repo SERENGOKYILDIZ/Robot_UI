@@ -1,39 +1,48 @@
 import turtle
 import tkinter as tk
+from tkinter import messagebox
 
+# Ana pencere
 root = tk.Tk()
-root.title("Turtle + Tkinter GUI")
+root.title("Tek Çizgi Çizimi")
 
-label = tk.Label(root, text="Turtle çizimini başlatmak için butona basın.")
-label.pack(pady=10)
+# Uzunluk girişi
+tk.Label(root, text="Uzunluk:").pack()
+entry_length = tk.Entry(root)
+entry_length.pack()
 
-canvas = tk.Canvas(master=root, width=400, height=400, bg="white")
-canvas.pack()
+# Açı girişi
+tk.Label(root, text="Açı (derece):").pack()
+entry_angle = tk.Entry(root)
+entry_angle.pack()
 
+# Canvas (turtle için)
+canvas = tk.Canvas(root, width=400, height=400, bg="white")
+canvas.pack(pady=10)
+
+# turtle ekranı ve turtle nesnesi
 screen = turtle.TurtleScreen(canvas)
 t = turtle.RawTurtle(screen)
 t.speed(1)
 
-def draw_circle():
+# Çizim fonksiyonu
+def draw_line():
+    try:
+        length = float(entry_length.get())
+        angle = float(entry_angle.get())
+    except ValueError:
+        messagebox.showerror("Hata", "Lütfen geçerli bir sayı girin!")
+        return
+
     t.clear()
     t.penup()
-    t.goto(0, -100)
+    t.goto(0, 0)
+    t.setheading(angle)  # Açıyı ayarla
     t.pendown()
-    t.circle(100)
+    t.forward(length)
 
-def draw_square():
-    t.clear()
-    t.penup()
-    t.goto(-50, -50)
-    t.pendown()
-    for _ in range(4):
-        t.forward(100)
-        t.left(90)
+# Buton
+tk.Button(root, text="Çiz", command=draw_line).pack(pady=5)
 
-btn_circle = tk.Button(root, text="Daire Çiz", command=draw_circle)
-btn_circle.pack(pady=5)
-
-btn_square = tk.Button(root, text="Kare Çiz", command=draw_square)
-btn_square.pack(pady=5)
-
+# Main loop
 root.mainloop()
